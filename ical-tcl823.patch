@@ -1,0 +1,13 @@
+--- ical-2.2/configure.in.tcl823	Sat Mar 18 18:58:52 2000
++++ ical-2.2/configure.in	Sat Mar 18 18:58:52 2000
+@@ -68,8 +68,8 @@
+ # Find Tcl/Tk
+ 
+ AC_CHECKING(Tcl/Tk installation)
+-legal_tk_versions="8.0 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1"
+-legal_tcl_versions="8.0 7.9 7.8 7.7 7.6 7.5"
++legal_tk_versions="8.3 8.2 8.0 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1"
++legal_tcl_versions="8.3 8.2 8.0 7.9 7.8 7.7 7.6 7.5"
+ 
+ #### Find tclsh
+ AC_ARG_WITH(tclsh,[  --with-tclsh=<path>     full path name of tclsh],
