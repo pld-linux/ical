@@ -1,0 +1,18 @@
+--- ical-2.2/ical.h.hack	Sun Mar 19 08:50:14 2000
++++ ical-2.2/ical.h	Sun Mar 19 08:50:32 2000
+@@ -25,13 +25,13 @@
+ 
+ #define TCL_Return(tcl,str)			\
+     do {					\
+-	Tcl_SetResult(tcl, (str), TCL_STATIC);	\
++	Tcl_SetResult(tcl, (char *)(str), TCL_STATIC);	\
+ 	return TCL_OK;				\
+     } while (0)
+ 
+ #define TCL_Error(tcl,str)			\
+     do {					\
+-	Tcl_SetResult(tcl, (str), TCL_STATIC);	\
++	Tcl_SetResult(tcl, (char *)(str), TCL_STATIC);	\
+ 	return TCL_ERROR;			\
+     } while (0)
+ 
