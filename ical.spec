@@ -38,7 +38,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/wmconfig
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_mandir}/man1}
 
-make install prefix=$RPM_BUILD_ROOT%{_prefix}
+%{__make} install prefix=$RPM_BUILD_ROOT%{_prefix}
 
 strip --strip-unneeded $RPM_BUILD_ROOT%{_bindir}/ical-%{version}
 
