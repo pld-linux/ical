@@ -5,4 +5,5 @@ Comment=Calendar and scheduling program with group calendar capabilities
 Comment[pl]=Program kalendarza i organizatora z możliwościami kalendarza grupowego
 Exec=ical
 Encoding=UTF-8
+Categories=Office;Calendar;
 # vi: encoding=utf-8
