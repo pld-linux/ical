@@ -1,6 +1,6 @@
 Summary:	An X Window System-based calendar program
 Summary(pl):	Kalendarz dzia³aj±cy pod X Window System
-Name:		ical 
+Name:		ical
 Version:	2.2
 Release:	20
 License:	distributable
