@@ -1,7 +1,7 @@
 Summary:	An X Window System-based calendar program
 Name:		ical 
 Version:	2.2
-Release:	18
+Release:	19
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
 Patch0:		%{name}-newtcl.patch
