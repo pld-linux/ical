@@ -8,7 +8,7 @@ Patch:		ical-2.2-newtcl.patch
 Url:		http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
 Copyright:	distributable
 Group:		Applications/Productivity
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Ical is an X Window System based calendar program.  Ical will easily
