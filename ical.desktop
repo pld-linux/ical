@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Ical
 Type=Application
-Description=Calendar and scheduling program with group calendar capabilities
-Description[pl]=Program kalendarza i organizatora z możliwościami kalendarza grupowego
+Comment=Calendar and scheduling program with group calendar capabilities
+Comment[pl]=Program kalendarza i organizatora z możliwościami kalendarza grupowego
 Exec=ical
 Encoding=UTF-8
 # vi: encoding=utf-8
