@@ -1,14 +1,14 @@
-Summary: An X Window System-based calendar program.
-Name: ical 
-Version: 2.2
-Release: 9
-Source: http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/ical-%{PACKAGE_VERSION}.tar.gz
-Source1: ical.wmconfig
-Patch0: ical-2.2-newtcl.patch
-Url: http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
-Copyright: distributable
-Group: Applications/Productivity
-BuildRoot: /var/tmp/ical-root
+Summary:	An X Window System-based calendar program.
+Name:		ical 
+Version:	2.2
+Release:	9
+Source:		http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/ical-%{PACKAGE_VERSION}.tar.gz
+Source1:	ical.wmconfig
+Patch:		ical-2.2-newtcl.patch
+Url:		http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
+Copyright:	distributable
+Group:		Applications/Productivity
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
 Ical is an X Window System based calendar program.  Ical will easily
@@ -21,30 +21,36 @@ need to have the X Window System installed in order to use ical.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -p1
 
 %build
 autoconf
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
+%configure
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/etc/X11/wmconfig
-mkdir -p $RPM_BUILD_ROOT/usr/{bin,lib,man/man1}
-make prefix=$RPM_BUILD_ROOT/usr install
-strip $RPM_BUILD_ROOT/usr/bin/ical-%{PACKAGE_VERSION}
-install -m 644 $RPM_SOURCE_DIR/ical.wmconfig $RPM_BUILD_ROOT/etc/X11/wmconfig/ical
+install -d $RPM_BUILD_ROOT/etc/X11/wmconfig
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_mandir}/man1}
+
+make install prefix=$RPM_BUILD_ROOT%{_prefix}
+
+strip --strip-unneeded $RPM_BUILD_ROOT%{_bindir}/ical-%{version}
+
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/X11/wmconfig/ical
+
+gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/ical.1 \
+	doc/ical.doc doc/interface.doc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
-%doc doc/ical.html doc/ical.doc 
-%doc doc/interface.html doc/interface.doc
-/usr/bin/ical-%{PACKAGE_VERSION}
-/usr/bin/ical
-/usr/man/man1/ical.1
-/usr/lib/ical
+%defattr(644,root,root,755)
+%doc doc/ical.html doc/ical.doc.gz
+%doc doc/interface.html doc/interface.doc.gz
+%attr(755,root,root) %{_bindir}/ical-%{version}
+%attr(755,root,root) %{_bindir}/ical
+%{_mandir}/man1/ical.1.gz
+%{_libdir}/ical
 /etc/X11/wmconfig/ical
