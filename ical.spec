@@ -6,7 +6,10 @@ Release:	20
 License:	distributable
 Group:		X11/Applications
 Group(de):	X11/Applikationen
+Group(es):	X11/Aplicaciones
 Group(pl):	X11/Aplikacje
+Group(pt_BR):	X11/Aplicações
+Group(pt):	X11/Aplicações
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
 Patch0:		%{name}-newtcl.patch
@@ -31,6 +34,12 @@ shared calendars between different users.
 Install ical if you need a calendar program to track your schedule.
 You'll need to have the X Window System installed in order to use
 ical.
+
+%description -l pl
+ical to kalendarz/terminarz pod X Window System. Mo¿e ³atwo tworzyæ,
+modyfikowaæ, usuwaæ wpisy, tworzyæ powtarzaj±ce siê wpisy, przypominaæ
+o zbli¿aj±cych siê spotkaniach, wy¶wietlaæ wyst±pienia wpisu; pozwala
+dzieliæ kalendarze pomiêdzy ró¿nymi u¿ytkownikami.
 
 %prep
 %setup -q
