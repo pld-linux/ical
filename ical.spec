@@ -18,6 +18,7 @@ Patch6:		%{name}-tcl84.patch
 URL:		http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	tk-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
