@@ -38,7 +38,9 @@ ical.
 
 %build
 autoconf
-%configure
+%configure \
+	--with-tclsh=/usr/bin/tclsh
+
 %{__make} OPTF="$RPM_OPT_FLAGS"
 
 %install
