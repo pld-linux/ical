@@ -50,7 +50,7 @@ cd types
 	autoconf
 cd ..
 aclocal
-autoconf
+%{__autoconf}
 %configure \
 	--with-tclsh=/usr/bin/tclsh
 
