@@ -6,6 +6,7 @@ Release:	20
 License:	distributable
 Group:		X11/Applications
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
+# Source0-md5:	6bb0d0ce76bb31570c2c99d8da70a58b
 Source1:	%{name}.desktop
 Patch0:		%{name}-newtcl.patch
 Patch1:		%{name}-tcl823.patch
