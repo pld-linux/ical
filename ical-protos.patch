@@ -1,0 +1,21 @@
+--- ical-2.2/configure.in.orig	2004-06-26 15:45:05.935655000 +0200
++++ ical-2.2/configure.in	2004-06-26 16:03:41.989989456 +0200
+@@ -314,9 +314,6 @@
+ AC_CHECK_FUNCS(fsync strerror uname)
+ AC_REPLACE_FUNCS(gethostname)
+ 
+-AC_LANG_SAVE
+-AC_LANG_CPLUSPLUS
+-
+ #############################################################################
+ # Macro to check for prototypes
+ 
+@@ -355,8 +352,6 @@
+ }
+ ],AC_DEFINE(HAVE_GETHOSTID),AC_MSG_RESULT(no),AC_MSG_RESULT(no))
+ 
+-AC_LANG_RESTORE
+-
+ ############################################################################
+ # Support for automatic reconfiguration
+ 
