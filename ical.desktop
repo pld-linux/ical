@@ -3,3 +3,4 @@ Name=Ical
 Type=Application
 Description=calendar and scheduling program with group calendar capabilities
 Exec=ical
+# vi: encoding=utf-8
