@@ -1,23 +1,28 @@
-Summary:	An X Window System-based calendar program.
+Summary:	An X Window System-based calendar program
 Name:		ical 
 Version:	2.2
 Release:	9
-Source:		http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/ical-%{PACKAGE_VERSION}.tar.gz
+Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{PACKAGE_VERSION}.tar.gz
 Source1:	ical.wmconfig
-Patch:		ical-2.2-newtcl.patch
+Patch0:		ical-2.2-newtcl.patch
 Url:		http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
 Copyright:	distributable
-Group:		Applications/Productivity
+Group:		X11/Applications
+Group(pl):	X11/Aplikacje
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_prefix		/usr/X11R6
+%define		_mandir		%{_prefix}/man
+
 %description
-Ical is an X Window System based calendar program.  Ical will easily
+Ical is an X Window System based calendar program. Ical will easily
 create/edit/delete entries, create repeating entries, remind you about
 upcoming appointments, print and list item occurrences, and allow
 shared calendars between different users.
 
-Install ical if you need a calendar program to track your schedule.  You'll
-need to have the X Window System installed in order to use ical.
+Install ical if you need a calendar program to track your schedule.
+You'll need to have the X Window System installed in order to use
+ical.
 
 %prep
 %setup -q
@@ -30,14 +35,14 @@ make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/X11/wmconfig
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/wmconfig
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_mandir}/man1}
 
 make install prefix=$RPM_BUILD_ROOT%{_prefix}
 
 strip --strip-unneeded $RPM_BUILD_ROOT%{_bindir}/ical-%{version}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/X11/wmconfig/ical
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/wmconfig/ical
 
 gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/ical.1 \
 	doc/ical.doc doc/interface.doc
@@ -53,4 +58,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ical
 %{_mandir}/man1/ical.1.gz
 %{_libdir}/ical
-/etc/X11/wmconfig/ical
+%{_sysconfdir}/X11/wmconfig/ical
