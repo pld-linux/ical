@@ -2,7 +2,11 @@ Summary:	An X Window System-based calendar program
 Summary(pl):	Kalendarz dzia³aj±cy pod X Window System
 Name:		ical 
 Version:	2.2
-Release:	19
+Release:	20
+License:	distributable
+Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
 Patch0:		%{name}-newtcl.patch
@@ -11,10 +15,8 @@ Patch2:		%{name}-hack.patch
 Patch3:		%{name}-DESTDIR.patch
 Patch4:		%{name}-OPTF.patch
 URL:		http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
-Copyright:	distributable
-Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(pl):	X11/Aplikacje
+BuildRequires:	automake
+BuildRequires:	autoconf
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
@@ -39,6 +41,11 @@ ical.
 %patch4 -p1
 
 %build
+cd types
+	aclocal
+	autoconf
+cd ..
+aclocal
 autoconf
 %configure \
 	--with-tclsh=/usr/bin/tclsh
