@@ -1,0 +1,963 @@
+--- ical-2.2/cal_tcl.C.orig	1995-07-06 17:48:16.000000000 +0200
++++ ical-2.2/cal_tcl.C	2004-06-26 16:27:30.622804256 +0200
+@@ -191,27 +191,27 @@
+ /*
+  * Forward declaration of handler procedures.
+  */
+-static int cal_delete	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_main	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_include	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_exclude	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_forincs	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_add	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_remove	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_hide	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_ronly	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_dirty	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_stale	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_save	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_reread	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_query	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_listing	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_loop	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_incal	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_option	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_doption	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_loopf	(ClientData, Tcl_Interp*, int, char*[]);
+-static int cal_loopb	(ClientData, Tcl_Interp*, int, char*[]);
++static int cal_delete	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_main	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_include	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_exclude	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_forincs	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_add	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_remove	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_hide	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_ronly	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_dirty	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_stale	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_save	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_reread	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_query	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_listing	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_loop	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_incal	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_option	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_doption	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_loopf	(ClientData, Tcl_Interp*, int, const char*[]);
++static int cal_loopb	(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ static Dispatch_Entry calendar_dispatch[] = {
+     { "delete",		0, 0, cal_delete	},
+@@ -242,7 +242,7 @@
+ // query operations.
+ 
+ static int parse_items(Tcl_Interp* tcl, Calendar_Tcl* cal, ItemList& items,
+-		       int& argc, char**& argv)
++		       int& argc, const char**& argv)
+ {
+     // modifies	items, argc, argv
+     // effects	If "argc/argv" starts with "-all", then strips off
+@@ -281,7 +281,7 @@
+ 
+     if ((argc >= 2) && (strcmp(argv[0], "-items") == 0)) {
+ 	int count;
+-	char** list;
++	const char** list;
+ 	if (Tcl_SplitList(tcl, argv[1], &count, &list) != TCL_OK) {
+ 	    TCL_Error(tcl, "invalid item list");
+ 	}
+@@ -308,23 +308,23 @@
+     return TCL_OK;
+ }
+ 
+-int Calendar_Tcl::method(int argc, char* argv[]) {
++int Calendar_Tcl::method(int argc, const char* argv[]) {
+     return Dispatch(calendar_dispatch, (ClientData)this, tcl(), argc, argv);
+ }
+ 
+-static int cal_delete(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_delete(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+     delete cal;
+ 
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_main(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_main(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+     TCL_Return(tcl, (char*) cal->main->GetName());
+ }
+ 
+-static int cal_include(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_include(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     if (cal->main->GetCalendar()->ReadOnly()) {
+@@ -347,7 +347,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_exclude(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_exclude(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     if (cal->main->GetCalendar()->ReadOnly()) {
+@@ -380,11 +380,11 @@
+     TCL_Error(tcl, "no such calendar");
+ }
+ 
+-static int cal_forincs(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_forincs(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+-    char* var = argv[0];
+-    char* body = argv[1];
++    const char* var = argv[0];
++    const char* body = argv[1];
+     for (int i = 0; i < cal->includes->size(); i++) {
+ 	if (Tcl_SetVar(tcl, var, (char*) (cal->includes->slot(i)->GetName()),
+ 		       0) == NULL) {
+@@ -400,7 +400,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_add(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_add(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     // Find item
+@@ -443,7 +443,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_remove(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_remove(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     // Find item
+@@ -470,7 +470,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_hide(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_hide(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     // Find item
+@@ -508,7 +508,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_ronly(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_ronly(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     CalFile* file = cal->name2file(argv[0]);
+@@ -519,7 +519,7 @@
+     TCL_Return(tcl, file->GetCalendar()->ReadOnly() ? "1" : "0");
+ }
+ 
+-static int cal_dirty(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_dirty(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     CalFile* file = cal->name2file(argv[0]);
+@@ -530,7 +530,7 @@
+     TCL_Return(tcl, (file->IsModified() ? "1" : "0"));
+ }
+ 
+-static int cal_stale(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_stale(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     CalFile* file = cal->name2file(argv[0]);
+@@ -541,7 +541,7 @@
+     TCL_Return(tcl, (file->FileHasChanged() ? "1" : "0"));
+ }
+ 
+-static int cal_save(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_save(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     CalFile* file = cal->name2file(argv[0]);
+@@ -560,7 +560,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_reread(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_reread(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     CalFile* file = cal->name2file(argv[0]);
+@@ -601,7 +601,7 @@
+ //		If "body" says "continue", move to the next iteration
+ 
+ static int item_loop(Tcl_Interp* tcl, Occurrences const& list,
+-		     char* ivar, char* dvar, char* body) {
++		     const char* ivar, const char* dvar, const char* body) {
+     for (int i = 0; i < list.size(); i++) {
+ 	if (Tcl_SetVar(tcl, ivar, (char*) list[i].item->handle(), 0) == NULL) {
+ 	    TCL_Error(tcl, "could not set loop variable");
+@@ -623,7 +623,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_query(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_query(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     ItemList items;
+@@ -650,7 +650,7 @@
+     return (item_loop(tcl, list, argv[2], argv[3], argv[4]));
+ }
+ 
+-static int cal_loopf(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_loopf(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     ItemList items;
+@@ -717,7 +717,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_loopb(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_loopb(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     ItemList items;
+@@ -784,7 +784,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_listing(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_listing(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     ItemList items;
+@@ -811,7 +811,7 @@
+     return (item_loop(tcl, list, argv[2], argv[3], argv[4]));
+ }
+ 
+-static int cal_loop(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_loop(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     ItemList items;
+@@ -837,7 +837,7 @@
+     return (item_loop(tcl, list, argv[0], 0, argv[1]));
+ }
+ 
+-static int cal_incal(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]){
++static int cal_incal(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+ 
+     CalFile* file = cal->name2file(argv[0]);
+@@ -867,7 +867,7 @@
+     return (item_loop(tcl, list, argv[1], 0, argv[2]));
+ }
+ 
+-static int cal_option(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int cal_option(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+     CalFile* file = cal->main;
+ 
+@@ -898,7 +898,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int cal_doption(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int cal_doption(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Calendar_Tcl* cal = (Calendar_Tcl*) c;
+     CalFile* file = cal->main;
+ 
+--- ical-2.2/dateeditor.C.orig	1996-02-10 04:17:35.000000000 +0100
++++ ical-2.2/dateeditor.C	2004-06-26 16:26:27.163451544 +0200
+@@ -47,7 +47,7 @@
+  *		item (under the assumption that the month  named by <date>
+  *		is being displayed).
+  */
+-int Cmd_MonthDays(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
++int Cmd_MonthDays(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     if (argc != 4) {
+ 	TCL_Error(tcl, "illegal number of arguments");
+     }
+@@ -68,7 +68,7 @@
+     }
+     int finish = start + first.GetMonth().Size(first.GetYear()) - 1;
+ 
+-    char* canvas = argv[2];
++    const char* canvas = argv[2];
+     if (Tcl_VarEval(tcl, canvas, " itemconfig Day -text {}", NULL) != TCL_OK) {
+ 	return TCL_ERROR;
+     }
+@@ -93,7 +93,7 @@
+  *		"<hlist>", the string "always" is used instead of actual
+  *		hilite style.
+  */
+-int Cmd_HiliteLoop(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
++int Cmd_HiliteLoop(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     int i;
+ 
+     if (argc != 8) {
+@@ -113,7 +113,7 @@
+     }
+ 
+     int count;
+-    char** strlist;
++    const char** strlist;
+     if (Tcl_SplitList(tcl, argv[2], &count, &strlist) != TCL_OK) {
+ 	return TCL_ERROR;
+     }
+@@ -124,9 +124,9 @@
+     Date today = Date::Today();
+     Date start(startDays);
+     Date finish(finishDays);
+-    char* dvar = argv[5];
+-    char* hvar = argv[6];
+-    char* body = argv[7];
++    const char* dvar = argv[5];
++    const char* hvar = argv[6];
++    const char* body = argv[7];
+ 
+     // Get all items
+     ItemList items;
+--- ical-2.2/dispatch.C.orig	1994-05-20 05:21:54.000000000 +0200
++++ ical-2.2/dispatch.C	2004-06-26 16:15:37.189262640 +0200
+@@ -4,13 +4,13 @@
+ #include "ical.h"
+ 
+ int Dispatch(Dispatch_Entry* table, ClientData c, Tcl_Interp* tcl,
+-	     int argc, char* argv[]) {
++	     int argc, const char* argv[]) {
+ 
+     if (argc < 2) {
+ 	TCL_Error(tcl, "invalid command");
+     }
+ 
+-    char* command = argv[1];
++    const char* command = argv[1];
+     argc -= 2;
+     argv += 2;
+ 
+--- ical-2.2/item_tcl.C.orig	1996-08-01 21:25:10.000000000 +0200
++++ ical-2.2/item_tcl.C	2004-06-26 16:27:59.773372696 +0200
+@@ -63,47 +63,47 @@
+ /*
+  * Forward declaration of handler procedures.
+  */
+-static int item_length	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_startt	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_clone	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_is	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_delete	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_cal	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_text	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_uid	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_early	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_owner	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_owned	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_own	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_hilite	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_todo	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_is_done	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_done	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_alarms	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_option	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_doption	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_empty	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_repeat	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_first	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_type	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_desc	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_cont	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_next	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_range	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_date	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_start	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_finish	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_ondel	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_dayr	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_wdays	(ClientData, Tcl_Interp*, int, char*[]);
+-
+-static int item_monthr		(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_mday		(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_mlday		(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_mworkday	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_mlworkday	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_mweekday	(ClientData, Tcl_Interp*, int, char*[]);
+-static int item_mlweekday	(ClientData, Tcl_Interp*, int, char*[]);
++static int item_length	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_startt	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_clone	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_is	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_delete	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_cal	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_text	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_uid	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_early	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_owner	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_owned	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_own	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_hilite	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_todo	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_is_done	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_done	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_alarms	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_option	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_doption	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_empty	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_repeat	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_first	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_type	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_desc	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_cont	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_next	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_range	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_date	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_start	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_finish	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_ondel	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_dayr	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_wdays	(ClientData, Tcl_Interp*, int, const char*[]);
++
++static int item_monthr		(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_mday		(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_mlday		(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_mworkday	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_mlworkday	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_mweekday	(ClientData, Tcl_Interp*, int, const char*[]);
++static int item_mlweekday	(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ static Dispatch_Entry item_dispatch[] = {
+     { "delete",			0, 0, item_delete	},
+@@ -156,7 +156,7 @@
+     { 0,			0, 0, 0			}
+ };
+ 
+-int Item_Tcl::method(int argc, char* argv[]) {
++int Item_Tcl::method(int argc, const char* argv[]) {
+     return Dispatch(item_dispatch, (ClientData)this, tcl(), argc, argv);
+ }
+ 
+@@ -164,7 +164,7 @@
+  * Handler procedures.
+  */
+ 
+-static int item_length(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_length(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     Appointment* appt = item->value()->AsAppointment();
+@@ -193,7 +193,7 @@
+     TCL_Error(tcl, "unknown command");
+ }
+ 
+-static int item_startt(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_startt(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     Appointment* appt = item->value()->AsAppointment();
+@@ -222,13 +222,13 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_clone(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_clone(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     Item_Tcl* clone = new Item_Tcl(tcl, item->value()->Clone(), 0);
+     TCL_Return(tcl, (char*) clone->handle());
+ }
+ 
+-static int item_is(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_is(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if ((strcmp(argv[0], "note") == 0) && (item->value()->AsNotice() != 0)) {
+@@ -242,7 +242,7 @@
+     TCL_Return(tcl, "0");
+ }
+ 
+-static int item_delete(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_delete(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = ((Item_Tcl*) c);
+     if (! check_permission(tcl, item)) return TCL_ERROR;
+ 
+@@ -262,7 +262,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_cal(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_cal(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     CalFile* cal = item->calendar();
+@@ -272,7 +272,7 @@
+     TCL_Return(tcl, (char*)(cal->GetName()));
+ }
+ 
+-static int item_text(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_text(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (argc == 0) {
+@@ -286,12 +286,12 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_uid(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_uid(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     TCL_Return(tcl, (char*) item->value()->GetUid());
+ }
+ 
+-static int item_early(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_early(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (argc == 0) {
+@@ -313,7 +313,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_owner(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_owner(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (argc == 0) {
+@@ -327,12 +327,12 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_owned(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_owned(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     TCL_Return(tcl, (item->value()->IsMine() ? "1" : "0"));
+ }
+ 
+-static int item_own(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_own(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     if (! check_permission(tcl, item)) return TCL_ERROR;
+     item->value()->MakeOwner();
+@@ -341,7 +341,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_hilite(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_hilite(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (argc == 0) {
+@@ -356,7 +356,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_todo(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_todo(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (argc == 0) {
+@@ -374,12 +374,12 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_is_done(ClientData c, Tcl_Interp* tcl,int argc,char* argv[]) {
++static int item_is_done(ClientData c, Tcl_Interp* tcl,int argc,const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     TCL_Return(tcl, (char*)(item->value()->IsDone() ? "1" : "0"));
+ }
+ 
+-static int item_done(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_done(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     if (! check_permission(tcl, item)) return TCL_ERROR;
+ 
+@@ -394,7 +394,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_alarms(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_alarms(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     Appointment* appt = item->value()->AsAppointment();
+@@ -431,7 +431,7 @@
+     }
+ 
+     int count;
+-    char** list;
++    const char** list;
+     if (Tcl_SplitList(tcl, argv[0], &count, &list) != TCL_OK) {
+ 	TCL_Error(tcl, "invalid alarm list");
+     }
+@@ -460,7 +460,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_option(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_option(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (argc == 1) {
+@@ -476,7 +476,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_doption(ClientData c, Tcl_Interp* tcl, int argc,char* argv[]) {
++static int item_doption(ClientData c, Tcl_Interp* tcl, int argc,const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     if (! check_permission(tcl, item)) return TCL_ERROR;
+@@ -490,17 +490,17 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_empty(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_empty(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     TCL_Return(tcl, (item->value()->empty()?"1":"0"));
+ }
+ 
+-static int item_repeat(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_repeat(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     TCL_Return(tcl,(item->value()->repeats()?"1":"0"));
+ }
+ 
+-static int item_first(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_first(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     Date d;
+     if (! item->value()->first(d)) {
+@@ -513,7 +513,7 @@
+     return TCL_OK;
+ }
+ 
+-static int item_type(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_type(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     char* result;
+     switch (item->value()->repeat_type()) {
+@@ -560,7 +560,7 @@
+     TCL_Return(tcl, result);
+ }
+ 
+-static int item_desc(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_desc(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     charArray buffer;
+     item->value()->describe(&buffer);
+@@ -569,7 +569,7 @@
+     return TCL_OK;
+ }
+ 
+-static int item_cont(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_cont(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     int dateDays;
+     if (Tcl_GetInt(tcl, argv[0], &dateDays) != TCL_OK) {
+@@ -579,7 +579,7 @@
+     TCL_Return(tcl, (item->value()->contains(date)?"1":"0"));
+ }
+ 
+-static int item_next(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_next(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     int dateDays;
+     if (Tcl_GetInt(tcl, argv[0], &dateDays) != TCL_OK) {
+@@ -597,7 +597,7 @@
+     return TCL_OK;
+ }
+ 
+-static int item_range(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_range(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     Date s, f;
+@@ -616,7 +616,7 @@
+     }
+ }
+ 
+-static int item_date(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_date(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     int dateDays;
+     if (Tcl_GetInt(tcl, argv[0], &dateDays) != TCL_OK) {
+@@ -630,7 +630,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_start(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_start(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     int dateDays;
+     if (Tcl_GetInt(tcl, argv[0], &dateDays) != TCL_OK) {
+@@ -644,7 +644,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_finish(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_finish(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     int dateDays;
+     if (Tcl_GetInt(tcl, argv[0], &dateDays) != TCL_OK) {
+@@ -658,7 +658,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_ondel(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_ondel(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+     int dateDays;
+     if (Tcl_GetInt(tcl, argv[0], &dateDays) != TCL_OK) {
+@@ -672,7 +672,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_dayr(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_dayr(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int interval;
+@@ -693,7 +693,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_monthr(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_monthr(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int interval;
+@@ -720,7 +720,7 @@
+ //		arguments.  Returns TCL_OK iff successful.  If "anchor"
+ //		and "interval" are not specified in the command arguments,
+ //		then "anchor" is set to today and "interval" is set to "1".
+-static int parse_month_args(Tcl_Interp* tcl, int argc, char* argv[],
++static int parse_month_args(Tcl_Interp* tcl, int argc, const char* argv[],
+ 			    int& n, Date& anchor, int& interval)
+ {
+     if ((argc != 1) && (argc != 3)) TCL_Error(tcl,"wrong number of arguments");
+@@ -745,7 +745,7 @@
+     return TCL_OK;
+ }
+ 
+-static int item_mday(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_mday(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int n, interval;
+@@ -760,7 +760,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_mlday(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_mlday(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int n, interval;
+@@ -776,7 +776,7 @@
+ }
+ 
+ static int item_mworkday(ClientData c, Tcl_Interp* tcl,
+-			 int argc, char* argv[]) {
++			 int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int n, interval;
+@@ -792,7 +792,7 @@
+ }
+ 
+ static int item_mlworkday(ClientData c, Tcl_Interp* tcl,
+-			  int argc, char* argv[]) {
++			  int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int n, interval;
+@@ -808,7 +808,7 @@
+ }
+ 
+ static int item_mweekday(ClientData c, Tcl_Interp* tcl,
+-			 int argc, char* argv[]) {
++			 int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int wday;
+@@ -829,7 +829,7 @@
+ }
+ 
+ static int item_mlweekday(ClientData c, Tcl_Interp* tcl,
+-			  int argc, char* argv[]) {
++			  int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     int wday;
+@@ -849,7 +849,7 @@
+     TCL_Return(tcl, "");
+ }
+ 
+-static int item_wdays(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++static int item_wdays(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Item_Tcl* item = (Item_Tcl*) c;
+ 
+     /* Collect weekdays */
+--- ical-2.2/object.C.orig	1994-05-20 05:22:04.000000000 +0200
++++ ical-2.2/object.C	2004-06-26 16:21:29.217746176 +0200
+@@ -8,7 +8,7 @@
+ #include "ical.h"
+ #include "object.h"
+ 
+-static int obj_handle(ClientData, Tcl_Interp*, int, char*[]);
++static int obj_handle(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ Object::Object(Tcl_Interp* t, char const* type) {
+     /* Generate handle */
+@@ -52,11 +52,11 @@
+     return 0;
+ }
+ 
+-int Object::method(int, char*[]) {
++int Object::method(int, const char*[]) {
+     TCL_Error(interp, "Object has no methods");
+ }
+ 
+-int obj_handle(ClientData c, Tcl_Interp* tcl, int argc, char* argv[]) {
++int obj_handle(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     Object* object = (Object*) c;
+ 
+     assert(object->tcl() == tcl);
+--- ical-2.2/object.h.orig	1994-04-02 02:11:55.000000000 +0200
++++ ical-2.2/object.h	2004-06-26 16:21:46.269153968 +0200
+@@ -45,7 +45,7 @@
+     static Object* find(Tcl_Interp*, char const* handle);
+ 
+     /* TCL Callback */
+-    virtual int method(int argc, char* argv[]);
++    virtual int method(int argc, const char* argv[]);
+   private:
+     void init(Tcl_Interp*, char const* otype, char const* ohandle);
+ 
+--- ical-2.2/ical.h.orig	2004-06-26 16:07:25.425022000 +0200
++++ ical-2.2/ical.h	2004-06-26 16:23:32.569993784 +0200
+@@ -38,18 +38,18 @@
+ 
+ // Prototype for Tcl commands.
+ 
+-extern int Cmd_CreateCalendar	(ClientData, Tcl_Interp*, int, char*[]);
+-extern int Cmd_CreateNotice	(ClientData, Tcl_Interp*, int, char*[]);
+-extern int Cmd_CreateAppt	(ClientData, Tcl_Interp*, int, char*[]);
++extern int Cmd_CreateCalendar	(ClientData, Tcl_Interp*, int, const char*[]);
++extern int Cmd_CreateNotice	(ClientData, Tcl_Interp*, int, const char*[]);
++extern int Cmd_CreateAppt	(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+-extern int Cmd_Date		(ClientData, Tcl_Interp*, int, char*[]);
+-extern int Cmd_Time		(ClientData, Tcl_Interp*, int, char*[]);
++extern int Cmd_Date		(ClientData, Tcl_Interp*, int, const char*[]);
++extern int Cmd_Time		(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ /* Speedup routines. */
+-extern int Cmd_MonthDays	(ClientData, Tcl_Interp*, int, char*[]);
+-extern int Cmd_HiliteLoop	(ClientData, Tcl_Interp*, int, char*[]);
++extern int Cmd_MonthDays	(ClientData, Tcl_Interp*, int, const char*[]);
++extern int Cmd_HiliteLoop	(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ /* Convenience routines */
+-extern int Cmd_ExpandFileName	(ClientData, Tcl_Interp*, int, char*[]);
++extern int Cmd_ExpandFileName	(ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ #endif /* _ICAL_H */
+--- ical-2.2/ical_tcl.C.orig	1996-02-10 04:17:37.000000000 +0100
++++ ical-2.2/ical_tcl.C	2004-06-26 16:24:15.510465840 +0200
+@@ -10,7 +10,7 @@
+  *	notice <name>
+  */
+ 
+-int Cmd_CreateNotice(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
++int Cmd_CreateNotice(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     if (argc != 1) {
+ 	TCL_Error(tcl, "invalid arguments to notice");
+     }
+@@ -25,7 +25,7 @@
+  *	appointment <name>	-- Returns <name>
+  */
+ 
+-int Cmd_CreateAppt(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
++int Cmd_CreateAppt(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     if (argc != 1) {
+ 	TCL_Error(tcl, "invalid arguments to appointment");
+     }
+@@ -40,7 +40,7 @@
+  *	calendar <name> <filename>	-- Returns <name>
+  */
+ 
+-int Cmd_CreateCalendar(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
++int Cmd_CreateCalendar(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     if (argc != 3) {
+ 	TCL_Error(tcl, "invalid arguments to calendar");
+     }
+@@ -62,7 +62,7 @@
+  *		of the translation fails, this routine returns an
+  *		error.  Otherwise it returns the translated file name.
+  */
+-int Cmd_ExpandFileName(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
++int Cmd_ExpandFileName(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
+     if (argc != 2) {
+ 	TCL_Error(tcl, "invalid arguments to expand_file_name");
+     }
+--- ical-2.2/time_tcl.C.orig	1994-05-20 05:22:05.000000000 +0200
++++ ical-2.2/time_tcl.C	2004-06-26 16:25:04.517015712 +0200
+@@ -32,8 +32,8 @@
+  */
+ 
+ /* Date command */
+-int Cmd_Date(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
+-    char* cmd = argv[1];
++int Cmd_Date(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
++    const char* cmd = argv[1];
+     char buffer[100];
+     int days;
+     Date d;
+@@ -162,8 +162,8 @@
+ }
+ 
+ /* Time command */
+-int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, char* argv[]) {
+-    char* cmd = argv[1];
++int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
++    const char* cmd = argv[1];
+     char buffer[100];
+     double secs;
+     Time t;
+--- ical-2.2/dispatch.h.orig	1993-06-01 19:18:39.000000000 +0200
++++ ical-2.2/dispatch.h	2004-06-26 16:27:14.332280792 +0200
+@@ -40,6 +40,6 @@
+  * The array is delimited by a NULL command field in the last entry.
+  */
+ 
+-extern int Dispatch(Dispatch_Entry*, ClientData, Tcl_Interp*, int, char*[]);
++extern int Dispatch(Dispatch_Entry*, ClientData, Tcl_Interp*, int, const char*[]);
+ 
+ #endif /* _DISPATCH_H */
+--- ical-2.2/cal_tcl.h.orig	1994-10-22 18:36:34.000000000 +0100
++++ ical-2.2/cal_tcl.h	2004-06-26 16:27:42.866942864 +0200
+@@ -24,7 +24,7 @@
+     int error();		/* Used to detect initialization error */
+     char const* error_msg();	/* Error description */
+ 
+-    virtual int method(int, char*[]);
++    virtual int method(int, const char*[]);
+ 
+     CalFile*  main;		/* Main calendar */
+     FileList* includes;		/* Included calendars */
+--- ical-2.2/item_tcl.h.orig	1994-02-24 23:59:27.000000000 +0100
++++ ical-2.2/item_tcl.h	2004-06-26 16:28:11.036660416 +0200
+@@ -31,7 +31,7 @@
+     static Item_Tcl* find(Item*);
+ 
+     // effects	Handle TCL commands
+-    virtual int method(int, char*[]);
++    virtual int method(int, const char*[]);
+   private:
+     Item* item;		// Associated item
+     CalFile* cal;	// Associated calendar
