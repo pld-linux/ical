@@ -5,11 +5,6 @@ Version:	2.2
 Release:	20
 License:	distributable
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
 Patch0:		%{name}-newtcl.patch
