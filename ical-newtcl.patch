@@ -1,0 +1,31 @@
+--- ical-2.2/configure.in.newtcl	Thu Sep 24 11:19:44 1998
++++ ical-2.2/configure.in	Thu Sep 24 11:21:27 1998
+@@ -145,8 +145,8 @@
+ 
+ #### Check that the library files exist
+ AC_MSG_CHECKING(for installed Tcl/Tk library files)
+-lib1="${TCL_EXEC_PREFIX}/lib/${TCL_LIB_FILE}"
+-lib2="${TK_EXEC_PREFIX}/lib/${TK_LIB_FILE}"
++eval lib1="${TCL_EXEC_PREFIX}/lib/${TCL_LIB_FILE}"
++eval lib2="${TK_EXEC_PREFIX}/lib/${TK_LIB_FILE}"
+ for f in "$lib1" "$lib2"; do
+     if test ! -f "$f"; then
+ 	AC_MSG_RESULT($f not found)
+@@ -164,7 +164,7 @@
+     if test "$TCL_LIB_VERSIONS_OK" = "yes"; then
+         TCL_LIB_SPEC="-L${TCL_EXEC_PREFIX}/lib -ltcl${TCL_VERSION}"
+     else
+-        TCL_LIB_SPEC="${TCL_EXEC_PREFIX}/lib/${TCL_LIB_FILE}"
++        eval TCL_LIB_SPEC="${TCL_EXEC_PREFIX}/lib/${TCL_LIB_FILE}"
+     fi
+ fi
+ 
+@@ -172,7 +172,7 @@
+     if test "$TCL_LIB_VERSIONS_OK" = "yes"; then
+         TK_LIB_SPEC="-L${TK_EXEC_PREFIX}/lib -ltk${TK_VERSION}"
+     else
+-        TK_LIB_SPEC="${TK_EXEC_PREFIX}/lib/${TK_LIB_FILE}"
++        eval TK_LIB_SPEC="${TK_EXEC_PREFIX}/lib/${TK_LIB_FILE}"
+     fi
+ fi
+ 
