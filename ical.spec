@@ -65,15 +65,13 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_mandir}/man1}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_applnkdir}/Applications
 
-gzip -9nf doc/ical.doc doc/interface.doc
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/ical.html doc/ical.doc.gz
-%doc doc/interface.html doc/interface.doc.gz
+%doc doc/ical.html doc/ical.doc
+%doc doc/interface.html doc/interface.doc
 %attr(755,root,root) %{_bindir}/ical
 %{_mandir}/man1/ical.1*
 %{_libdir}/ical
