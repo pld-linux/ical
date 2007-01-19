@@ -1,0 +1,25 @@
+diff -urN ical-2.2.org/configure.in ical-2.2/configure.in
+--- ical-2.2.org/configure.in	1997-10-22 01:52:58.000000000 +0200
++++ ical-2.2/configure.in	2007-01-19 18:37:35.429976750 +0100
+@@ -336,13 +336,14 @@
+    AC_DEFINE_UNQUOTED(${ac_tr_func})
+    fi])dnl
+ 
+-ICAL_CHECK_PROTO(strerror,string.h)
+-ICAL_CHECK_PROTO(sys_errlist,errno.h)
+-ICAL_CHECK_PROTO(gettimeofday,sys/time.h)
+-ICAL_CHECK_PROTO(gethostname,unistd.h)
+-ICAL_CHECK_PROTO(getpid,unistd.h)
+-ICAL_CHECK_PROTO(strncasecmp,string.h)
+-ICAL_CHECK_PROTO(gethostid,unistd.h)
++AC_DEFINE(HAVE_STRERROR_PROTO)
++AC_DEFINE(HAVE_SYS_ERRLIST_PROTO)
++AC_DEFINE(HAVE_GETTIMEOFDAY_PROTO)
++AC_DEFINE(HAVE_GETHOSTID_PROTO)
++AC_DEFINE(HAVE_GETHOSTNAME_PROTO)
++AC_DEFINE(HAVE_GETPID_PROTO)
++AC_DEFINE(HAVE_STRNCASECMP_PROTO)
++
+ 
+ # gethostid
+ AC_MSG_CHECKING(for working gethostid)
