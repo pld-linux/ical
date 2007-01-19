@@ -2,7 +2,7 @@ Summary:	An X Window System-based calendar program
 Summary(pl):	Kalendarz dzia³aj±cy pod X Window System
 Name:		ical
 Version:	2.2
-Release:	21
+Release:	22
 License:	distributable
 Group:		X11/Applications
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
@@ -15,6 +15,7 @@ Patch3:		%{name}-DESTDIR.patch
 Patch4:		%{name}-OPTF.patch
 Patch5:		%{name}-protos.patch
 Patch6:		%{name}-tcl84.patch
+Patch7:		%{name}-prototypes.patch
 URL:		http://www.research.digital.com/SRC/personal/Sanjay_Ghemawat/ical/home.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -48,6 +49,7 @@ dzieliæ kalendarze pomiêdzy ró¿nymi u¿ytkownikami.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %{__perl} -pi -e 's@/lib(.*T.*_LIB_FILE)@/%{_lib}$1@' configure.in
 
