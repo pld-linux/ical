@@ -1,5 +1,5 @@
 Summary:	An X Window System-based calendar program
-Summary(pl.UTF-8):   Kalendarz działający pod X Window System
+Summary(pl.UTF-8):	Kalendarz działający pod X Window System
 Name:		ical
 Version:	2.2
 Release:	22
