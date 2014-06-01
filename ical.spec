@@ -2,7 +2,7 @@ Summary:	An X Window System-based calendar program
 Summary(pl.UTF-8):	Kalendarz działający pod X Window System
 Name:		ical
 Version:	2.2
-Release:	23
+Release:	24
 License:	distributable
 Group:		X11/Applications
 Source0:	http://www.research.digial.com/SRC/personal/Sanjay_Ghemawat/ical/icalbins/%{name}-%{version}.tar.gz
