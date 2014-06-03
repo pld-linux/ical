@@ -1,0 +1,11 @@
+--- ical-2.2/calendar/calfile.C~	1997-05-24 02:23:52.000000000 +0200
++++ ical-2.2/calendar/calfile.C	2014-06-03 10:55:47.545370505 +0200
+@@ -60,7 +60,7 @@
+     backupName = tmp;
+ 
+     // Get directory name for access checks
+-    char* lastSlash = strrchr(name, '/');
++    char* lastSlash = (char *)strrchr(name, '/');
+     if (lastSlash == 0) {
+ 	/* Calendar is in current directory */
+ 	tmp = new char[3];
